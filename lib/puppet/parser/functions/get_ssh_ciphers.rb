@@ -29,5 +29,29 @@ Puppet::Parser::Functions.newfunction(:get_ssh_ciphers, :type => :rvalue) do |ar
     ciphers['weak'] = ciphers['default'] + ',aes256-cbc,aes192-cbc,aes128-cbc'
   end
 
+  ## ubuntu 12, debian 7
+  if Puppet::Util::Package.versioncmp(ssh_vers, '5.9') >= 0
+    ciphers.default = 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+#    ciphers['weak'] = ciphers['default'] + ',aes256-cbc,aes192-cbc,aes128-cbc'
+  end
+
+  ## ubuntu 14
+  if Puppet::Util::Package.versioncmp(ssh_vers, '6.6') >= 0
+    ciphers.default = 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+#    ciphers['weak'] = ciphers['default'] + ',aes256-cbc,aes192-cbc,aes128-cbc'
+  end
+
+  ## debian 10
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.9') >= 0
+    ciphers.default = 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+#    ciphers['weak'] = ciphers['default'] + ',aes256-cbc,aes192-cbc,aes128-cbc'
+  end
+
+  ## debian 11
+  if Puppet::Util::Package.versioncmp(ssh_vers, '8.4') >= 0
+    ciphers.default = 'chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr'
+#    ciphers['weak'] = ciphers['default'] + ',aes256-cbc,aes192-cbc,aes128-cbc'
+  end
+
   ciphers[use_weak]
 end

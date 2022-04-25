@@ -29,5 +29,30 @@ Puppet::Parser::Functions.newfunction(:get_ssh_kex, :type => :rvalue) do |args|
     kex['weak'] = kex['default'] + ',diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1'
   end
 
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.2') >= 0
+    kex.default = 'curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256'
+    kex['weak'] = kex['default'] + ''
+  end
+
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.2') >= 0
+    kex.default = 'curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256'
+    kex['weak'] = kex['default'] + ''
+  end
+
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.6') >= 0
+    kex.default = 'curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256'
+    kex['weak'] = kex['default'] + ',diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1'
+  end
+
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.9') >= 0
+    kex.default = 'curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256'
+    kex['weak'] = kex['default'] + ''
+  end
+
+  if Puppet::Util::Package.versioncmp(ssh_vers, '8.4') >= 0
+    kex.default = 'curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256'
+    kex['weak'] = kex['default'] + ''
+  end
+
   kex[use_weak]
 end

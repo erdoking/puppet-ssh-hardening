@@ -19,19 +19,37 @@ Puppet::Parser::Functions.newfunction(:get_ssh_macs, :type => :rvalue) do |args|
   ssh_vers = args[0]
   use_weak = args[1] ? 'weak' : 'default'
 
+
+
   # min vers. 5.3
+  ## debian 6, redhat 6
   macs = {}
   macs.default = 'hmac-ripemd160,hmac-sha1'
 
+  ## ubuntu 12, debian 7
   if Puppet::Util::Package.versioncmp(ssh_vers, '5.9') >= 0
     macs.default = 'hmac-sha2-512,hmac-sha2-256,hmac-ripemd160'
     macs['weak'] = macs['default'] + ',hmac-sha1'
   end
 
+  ## ubuntu 14
   if Puppet::Util::Package.versioncmp(ssh_vers, '6.6') >= 0
     macs.default = 'hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160'
-    macs['weak'] = macs['default'] + ',hmac-sha1'
+    macs['weak'] = macs['default'] + 'hmac-sha1'
   end
+
+  ## debian 10
+  if Puppet::Util::Package.versioncmp(ssh_vers, '7.9') >= 0
+    macs.default = 'hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com'
+    macs['weak'] = macs['default'] + 'hmac-sha1'
+  end
+
+  ## debian 11
+  if Puppet::Util::Package.versioncmp(ssh_vers, '8.4') >= 0
+    macs.default = 'hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com'
+    macs['weak'] = macs['default'] + ''
+  end
+
 
   macs[use_weak]
 end
